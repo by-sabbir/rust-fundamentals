@@ -1,7 +1,9 @@
-use std::{collections::HashMap, io::stdin};
+use std::{collections::HashMap, fs, io::stdin, path::Path};
+
+use serde::{Deserialize, Serialize};
 
 // temporary user storage
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct User {
     pub name: String,
     pub password: String,
@@ -18,7 +20,7 @@ impl User {
     }
 }
 
-fn get_users() -> HashMap<String, User> {
+fn get_default_users() -> HashMap<String, User> {
     let mut users = HashMap::new();
 
     users.insert(
@@ -33,13 +35,28 @@ fn get_users() -> HashMap<String, User> {
     users
 }
 
+fn get_users() -> HashMap<String, User> {
+    let users_path = Path::new("users.json");
+    if users_path.exists() {
+        let user_json = fs::read_to_string(users_path).unwrap();
+        let users: HashMap<String, User> = serde_json::from_str(&user_json).unwrap();
+
+        users
+    } else {
+        let users = get_default_users();
+        let user_json = serde_json::to_string_pretty(&users).unwrap();
+        let _ = fs::write(users_path, user_json);
+        users
+    }
+}
+
 #[derive(Debug, PartialEq)]
 pub enum LoginAction {
     Granted(LoginRole),
     Denied,
 }
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub enum LoginRole {
     Admin,
     User,
