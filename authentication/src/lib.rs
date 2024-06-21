@@ -1,6 +1,7 @@
 use std::{collections::HashMap, fs, io::stdin, path::Path};
 
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha512};
 
 // temporary user storage
 #[derive(Debug, Serialize, Deserialize)]
@@ -14,7 +15,7 @@ impl User {
     pub fn new(name: &str, pass: &str, role: LoginRole) -> User {
         Self {
             name: name.to_lowercase(),
-            password: pass.to_string(),
+            password: hash_password(pass),
             role,
         }
     }
@@ -29,7 +30,7 @@ fn get_default_users() -> HashMap<String, User> {
     );
     users.insert(
         "bob".to_string(),
-        User::new("bob", "password", LoginRole::User),
+        User::new("bob", "password2", LoginRole::User),
     );
 
     users
@@ -73,6 +74,13 @@ pub fn login(username: &str, password: &str) -> Option<LoginAction> {
         }
     }
     return None;
+}
+
+pub fn hash_password(pass: &str) -> String {
+    let mut hasher = Sha512::new();
+    hasher.update(pass);
+
+    format!("{:X}", hasher.finalize())
 }
 
 pub fn greet_user(name: &str) -> String {
