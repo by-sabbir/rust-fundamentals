@@ -7,4 +7,4 @@ edition = "2021"
 authentication = { path = "authentication" }
 
 [workspace]
-members = ["authentication"]
+members = ["authentication", "login-manager"]
