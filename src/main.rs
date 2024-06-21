@@ -12,24 +12,24 @@ fn main() {
         match login_action {
             Some(login_action) => match login_action {
                 LoginAction::Granted(LoginRole::Admin) => {
-                    println!("Admin Login\n{}", greet_user(&username));
+                    println!("Admin Login\t{}", greet_user(&username));
                     break;
                 }
                 LoginAction::Granted(LoginRole::User) => {
-                    println!("User Login\n{}", greet_user(&username));
+                    println!("User Login\t{}", greet_user(&username));
                     break;
                 }
                 LoginAction::Denied => {
                     retries += 1;
                     if retries >= 3 {
-                        println!("too many attempts");
+                        println!("Too Many Attempts.");
                         break;
                     }
-                    println!("Login Denied; retry attemps: {retries}/3");
+                    println!("Access Denied; Retries; {retries}/3");
                 }
             },
             None => {
-                println!("new user");
+                println!("New User");
                 break;
             }
         }

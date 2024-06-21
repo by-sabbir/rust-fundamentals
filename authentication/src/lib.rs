@@ -1,27 +1,52 @@
 use std::io::stdin;
 
+// temporary user storage
+pub struct User {
+    pub name: String,
+    pub password: String,
+    pub role: LoginRole,
+}
+
+impl User {
+    pub fn new(name: &str, pass: &str, role: LoginRole) -> User {
+        Self {
+            name: name.to_lowercase(),
+            password: pass.to_string(),
+            role,
+        }
+    }
+}
+
+fn get_users() -> [User; 2] {
+    [
+        User::new("bob", "password", LoginRole::User),
+        User::new("admin", "password", LoginRole::Admin),
+    ]
+}
+
 #[derive(Debug, PartialEq)]
 pub enum LoginAction {
     Granted(LoginRole),
     Denied,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum LoginRole {
     Admin,
     User,
 }
 
 pub fn login(username: &str, password: &str) -> Option<LoginAction> {
-    if username == "admin" && password == "password" {
-        return Some(LoginAction::Granted(LoginRole::Admin));
-    } else if username == "bob" && password == "password" {
-        return Some(LoginAction::Granted(LoginRole::User));
-    } else if username != "bob" && username != "admin" {
-        return None;
-    } else {
-        return Some(LoginAction::Denied);
+    let users = get_users();
+
+    if let Some(user) = users.iter().find(|u| u.name == username) {
+        if user.password == password {
+            return Some(LoginAction::Granted(user.role.clone()));
+        } else {
+            return Some(LoginAction::Denied);
+        }
     }
+    return None;
 }
 
 pub fn greet_user(name: &str) -> String {

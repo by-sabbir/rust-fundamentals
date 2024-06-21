@@ -10,11 +10,18 @@ This project is a simple authentication system implemented in Rust using the Car
 
 ## Usage
 
-To run the application, simply execute the `main` function in the `src/main.rs` file. The program will prompt the user to enter their username and password, then attempt to log them in.
+```bash
+cargo run
+```
 
-## Testing
+## Hot takes
 
-The project includes a comprehensive set of tests in the `tests` directory. These tests cover various scenarios, including successful login, denied login, and invalid input.
+- Options are for matching 2 possible outcomes
+  - where one outcome can be matched with `Some`
+  - `None` is like else statement
+- `structs` can be used with `enum` vice versa
+- `impl` binds methods with `enums` and `structs`
+- `predicate` means function/closure
 
 ## Use of `match` expression
 
