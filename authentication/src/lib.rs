@@ -1,6 +1,7 @@
-use std::io::stdin;
+use std::{collections::HashMap, io::stdin};
 
 // temporary user storage
+#[derive(Debug)]
 pub struct User {
     pub name: String,
     pub password: String,
@@ -17,11 +18,19 @@ impl User {
     }
 }
 
-fn get_users() -> [User; 2] {
-    [
-        User::new("bob", "password", LoginRole::User),
+fn get_users() -> HashMap<String, User> {
+    let mut users = HashMap::new();
+
+    users.insert(
+        "admin".to_string(),
         User::new("admin", "password", LoginRole::Admin),
-    ]
+    );
+    users.insert(
+        "bob".to_string(),
+        User::new("bob", "password", LoginRole::User),
+    );
+
+    users
 }
 
 #[derive(Debug, PartialEq)]
@@ -39,7 +48,7 @@ pub enum LoginRole {
 pub fn login(username: &str, password: &str) -> Option<LoginAction> {
     let users = get_users();
 
-    if let Some(user) = users.iter().find(|u| u.name == username) {
+    if let Some(user) = users.get(username) {
         if user.password == password {
             return Some(LoginAction::Granted(user.role.clone()));
         } else {

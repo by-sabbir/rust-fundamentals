@@ -22,6 +22,8 @@ cargo run
 - `structs` can be used with `enum` vice versa
 - `impl` binds methods with `enums` and `structs`
 - `predicate` means function/closure
+- `iter` passes by reference, the original items stays the same.
+  - `into_iter` moves the value. it destroys the original items
 
 ## Use of `match` expression
 
