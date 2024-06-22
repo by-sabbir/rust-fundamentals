@@ -41,14 +41,12 @@ pub fn get_users() -> HashMap<String, User> {
     if users_path.exists() {
         let user_json = fs::read_to_string(users_path).unwrap();
         let users: HashMap<String, User> = serde_json::from_str(&user_json).unwrap();
-
-        users
-    } else {
-        let users = get_default_users();
-        let user_json = serde_json::to_string_pretty(&users).unwrap();
-        let _ = fs::write(users_path, user_json);
-        users
+        return users;
     }
+    let users = get_default_users();
+    let user_json = serde_json::to_string_pretty(&users).unwrap();
+    let _ = fs::write(users_path, user_json);
+    return users;
 }
 
 #[derive(Debug, PartialEq)]
